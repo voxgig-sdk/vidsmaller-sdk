@@ -1,0 +1,19 @@
+{
+  "files": [
+    "SUMMARY.md"
+  ],
+  "config": ".sdk/doc/qa/vale.ini",
+  "routes": {},
+  "quoted": {
+    "SUMMARY.md": [
+      "> Check platform upload limits, estimate a safe target size, and run asynchronous target-size video compression jobs. Read-only endpoints need no key. Uploads and compression jobs use a VidSmaller bearer API key and account credits. The GET job-status and job-download operations were removed because they need a VidSmaller API key (401 without one).\n>\n> `sizeMb` on GET /api/v1/estimate is marked required: the API answers 400 without `sizeBytes` or `sizeMb` (verified 2026-10-25).",
+      "Compression job created",
+      "Create a key at https://vidsmaller.com/dashboard/api-keys.",
+      "Fit verdict and estimate",
+      "Platform limits",
+      "Production",
+      "Signed upload URL created",
+      "v1-prefixed HMAC-SHA256 of timestamp + &#39;.&#39; + rawBody."
+    ]
+  }
+}

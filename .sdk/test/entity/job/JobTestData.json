@@ -1,0 +1,60 @@
+{
+  "existing": {
+    "job": {
+      "JOB00": {
+        "codec": "s50",
+        "duration_seconds": 81,
+        "max_resolution": "s52",
+        "output_format": "s53",
+        "source_url": "s54",
+        "target_size_mb": 85,
+        "upload_token": "s56",
+        "webhook_url": "s57",
+        "id": "JOB00"
+      },
+      "JOB01": {
+        "codec": "sa0",
+        "duration_seconds": 161,
+        "max_resolution": "sa2",
+        "output_format": "sa3",
+        "source_url": "sa4",
+        "target_size_mb": 165,
+        "upload_token": "sa6",
+        "webhook_url": "sa7",
+        "id": "JOB01"
+      },
+      "JOB02": {
+        "codec": "sf0",
+        "duration_seconds": 241,
+        "max_resolution": "sf2",
+        "output_format": "sf3",
+        "source_url": "sf4",
+        "target_size_mb": 245,
+        "upload_token": "sf6",
+        "webhook_url": "sf7",
+        "id": "JOB02"
+      }
+    }
+  },
+  "new": {
+    "job": {
+      "job_ref01": {
+        "codec": "s140",
+        "duration_seconds": 321,
+        "max_resolution": "s142",
+        "output_format": "s143",
+        "source_url": "s144",
+        "target_size_mb": 325,
+        "upload_token": "s146",
+        "webhook_url": "s147"
+      }
+    }
+  },
+  "requests": {
+    "POST /api/v1/video/jobs": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    }
+  }
+}

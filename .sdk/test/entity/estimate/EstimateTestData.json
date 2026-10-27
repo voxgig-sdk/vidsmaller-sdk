@@ -1,0 +1,113 @@
+{
+  "existing": {
+    "estimate": {
+      "ESTIMATE00": {
+        "api": "sc8",
+        "compressUrl": "sc9",
+        "docs": "sca",
+        "durationSeconds": 203,
+        "estimate": "scc",
+        "fitsAsIs": "scd",
+        "height": 206,
+        "input": {},
+        "notes": [],
+        "ok": false,
+        "platform": "sd2",
+        "recommendation": "sd3",
+        "settings": {},
+        "sizeBytes": 213,
+        "sizeMb": 214,
+        "target": "sd7",
+        "targetMb": 216,
+        "unit": "sd9",
+        "verdict": "sda",
+        "width": 219,
+        "id": "ESTIMATE00"
+      },
+      "ESTIMATE01": {
+        "api": "s190",
+        "compressUrl": "s191",
+        "docs": "s192",
+        "durationSeconds": 403,
+        "estimate": "s194",
+        "fitsAsIs": "s195",
+        "height": 406,
+        "input": {},
+        "notes": [],
+        "ok": false,
+        "platform": "s19a",
+        "recommendation": "s19b",
+        "settings": {},
+        "sizeBytes": 413,
+        "sizeMb": 414,
+        "target": "s19f",
+        "targetMb": 416,
+        "unit": "s1a1",
+        "verdict": "s1a2",
+        "width": 419,
+        "id": "ESTIMATE01"
+      },
+      "ESTIMATE02": {
+        "api": "s258",
+        "compressUrl": "s259",
+        "docs": "s25a",
+        "durationSeconds": 603,
+        "estimate": "s25c",
+        "fitsAsIs": "s25d",
+        "height": 606,
+        "input": {},
+        "notes": [],
+        "ok": false,
+        "platform": "s262",
+        "recommendation": "s263",
+        "settings": {},
+        "sizeBytes": 613,
+        "sizeMb": 614,
+        "target": "s267",
+        "targetMb": 616,
+        "unit": "s269",
+        "verdict": "s26a",
+        "width": 619,
+        "id": "ESTIMATE02"
+      }
+    }
+  },
+  "new": {
+    "estimate": {
+      "estimate_ref01": {
+        "api": "s320",
+        "compressUrl": "s321",
+        "docs": "s322",
+        "durationSeconds": 803,
+        "estimate": "s324",
+        "fitsAsIs": "s325",
+        "height": 806,
+        "input": {},
+        "notes": [],
+        "ok": false,
+        "platform": "s32a",
+        "recommendation": "s32b",
+        "settings": {},
+        "sizeBytes": 813,
+        "sizeMb": 814,
+        "target": "s32f",
+        "targetMb": 816,
+        "unit": "s331",
+        "verdict": "s332",
+        "width": 819
+      }
+    }
+  },
+  "requests": {
+    "POST /api/v1/estimate": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    },
+    "GET /api/v1/estimate": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    }
+  }
+}

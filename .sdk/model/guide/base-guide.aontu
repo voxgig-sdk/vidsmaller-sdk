@@ -1,0 +1,40 @@
+# Generated from the API definition and overwritten on every build: do not
+# edit this file. Put customizations in the guide entry file, which includes
+# this one and overrides its defaults:
+#   guide.aontu
+
+guide: {
+  metrics: count: entity: 4
+  metrics: count: path: 4
+  metrics: count: method: 5
+
+  entity: estimate: {
+    path: "/api/v1/estimate": {
+      op: create: method: *POST
+      op: create: transform: res: *("`body.estimate`")|top
+      op: list: method: *GET
+      op: list: transform: res: *("`body.estimate`")|top
+    }
+  }
+
+  entity: job: {
+    path: "/api/v1/video/jobs": {
+      op: create: method: *POST
+      op: create: transform: res: *("`body.job`")|top
+    }
+  }
+
+  entity: platform: {
+    path: "/api/v1/platforms": {
+      op: list: method: *GET
+    }
+  }
+
+  entity: upload: {
+    path: "/api/v1/video/uploads": {
+      op: create: method: *POST
+      op: create: transform: res: *("`body.upload`")|top
+    }
+  }
+
+}

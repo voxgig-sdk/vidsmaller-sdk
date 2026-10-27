@@ -1,0 +1,112 @@
+# Entity: job
+
+main: kit: entity: job: {
+
+  alias: field: {}
+
+  fields: {
+    codec: {
+      h: "Codec"
+      n: "codec"
+      r: false
+      t: "`$STRING`"
+    }
+    duration_seconds: {
+      h: "Duration Seconds"
+      n: "duration_seconds"
+      r: false
+      t: "`$NUMBER`"
+    }
+    max_resolution: {
+      h: "Max Resolution"
+      n: "max_resolution"
+      r: false
+      t: "`$STRING`"
+    }
+    output_format: {
+      h: "Output Format"
+      n: "output_format"
+      r: false
+      t: "`$STRING`"
+    }
+    source_url: {
+      fo: "uri"
+      h: "Source Url"
+      n: "source_url"
+      r: false
+      t: "`$STRING`"
+    }
+    target_size_mb: {
+      h: "Target Size Mb"
+      n: "target_size_mb"
+      r: true
+      t: "`$NUMBER`"
+    }
+    upload_token: {
+      h: "Upload Token"
+      n: "upload_token"
+      r: false
+      t: "`$STRING`"
+    }
+    webhook_url: {
+      fo: "uri"
+      h: "Webhook Url"
+      n: "webhook_url"
+      r: false
+      t: "`$STRING`"
+    }
+  }
+
+  name: "job"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          bf: [
+            "codec"
+            "duration_seconds"
+            "max_resolution"
+            "output_format"
+            "source_url"
+            "target_size_mb"
+            "upload_token"
+            "webhook_url"
+          ]
+          co: {
+            id: "POST /api/v1/video/jobs"
+            source: "openapi3"
+            version: 2
+          }
+          m: "POST"
+          o: "/api/v1/video/jobs"
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
+          s: [
+            {
+              lit: "api"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "video"
+            }
+            {
+              lit: "jobs"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.job`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

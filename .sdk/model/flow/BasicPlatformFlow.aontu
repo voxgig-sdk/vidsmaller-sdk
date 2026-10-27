@@ -1,0 +1,22 @@
+# BasicPlatformFlow
+
+main: kit: flow: BasicPlatformFlow:
+{
+  entity: "platform",
+  kind: "basic",
+  name: "BasicPlatformFlow",
+  step: [
+    {
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "platform_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicPlatformFlow"
+}

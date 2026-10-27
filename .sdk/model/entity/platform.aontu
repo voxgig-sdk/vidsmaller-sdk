@@ -1,0 +1,93 @@
+# Entity: platform
+
+main: kit: entity: platform: {
+
+  alias: field: {}
+
+  fields: {
+    api: {
+      h: "Api"
+      n: "api"
+      r: true
+      t: "`$STRING`"
+    }
+    count: {
+      h: "Count"
+      n: "count"
+      r: true
+      t: "`$INTEGER`"
+    }
+    docs: {
+      fo: "uri"
+      h: "Docs"
+      n: "docs"
+      r: true
+      t: "`$STRING`"
+    }
+    ok: {
+      h: "Ok"
+      n: "ok"
+      r: true
+      t: "`$BOOLEAN`"
+    }
+    platforms: {
+      h: "Platforms"
+      n: "platforms"
+      r: true
+      t: "`$ARRAY`"
+    }
+    unit: {
+      h: "Unit"
+      n: "unit"
+      r: true
+      t: "`$STRING`"
+    }
+    verifiedAt: {
+      fo: "date"
+      h: "Verified At"
+      n: "verifiedAt"
+      r: true
+      t: "`$STRING`"
+    }
+  }
+
+  name: "platform"
+  op: {
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "GET /api/v1/platforms"
+            source: "openapi3"
+            version: 2
+          }
+          m: "GET"
+          o: "/api/v1/platforms"
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
+          s: [
+            {
+              lit: "api"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "platforms"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

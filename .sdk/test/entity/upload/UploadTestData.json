@@ -1,0 +1,40 @@
+{
+  "existing": {
+    "upload": {
+      "UPLOAD00": {
+        "content_type": "s1e",
+        "file_size": 31,
+        "filename": "s20",
+        "id": "UPLOAD00"
+      },
+      "UPLOAD01": {
+        "content_type": "s3c",
+        "file_size": 61,
+        "filename": "s3e",
+        "id": "UPLOAD01"
+      },
+      "UPLOAD02": {
+        "content_type": "s5a",
+        "file_size": 91,
+        "filename": "s5c",
+        "id": "UPLOAD02"
+      }
+    }
+  },
+  "new": {
+    "upload": {
+      "upload_ref01": {
+        "content_type": "s78",
+        "file_size": 121,
+        "filename": "s7a"
+      }
+    }
+  },
+  "requests": {
+    "POST /api/v1/video/uploads": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    }
+  }
+}

@@ -1,0 +1,75 @@
+# Entity: upload
+
+main: kit: entity: upload: {
+
+  alias: field: {}
+
+  fields: {
+    content_type: {
+      h: "Content Type"
+      n: "content_type"
+      r: false
+      t: "`$STRING`"
+    }
+    file_size: {
+      h: "File Size"
+      n: "file_size"
+      r: true
+      t: "`$INTEGER`"
+    }
+    filename: {
+      h: "Filename"
+      n: "filename"
+      r: true
+      t: "`$STRING`"
+    }
+  }
+
+  name: "upload"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          bf: [
+            "content_type"
+            "file_size"
+            "filename"
+          ]
+          co: {
+            id: "POST /api/v1/video/uploads"
+            source: "openapi3"
+            version: 2
+          }
+          m: "POST"
+          o: "/api/v1/video/uploads"
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
+          s: [
+            {
+              lit: "api"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "video"
+            }
+            {
+              lit: "uploads"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.upload`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}

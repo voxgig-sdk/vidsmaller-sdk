@@ -1,0 +1,30 @@
+# BasicEstimateFlow
+
+main: kit: flow: BasicEstimateFlow:
+{
+  entity: "estimate",
+  kind: "basic",
+  name: "BasicEstimateFlow",
+  step: [
+    {
+      i: {
+        ref: "estimate_ref01"
+      }
+
+      o: "create"
+    }
+
+    {
+      o: "list",
+      v: [
+        {
+          apply: "ItemExists",
+          def: {
+            ref: "estimate_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicEstimateFlow"
+}

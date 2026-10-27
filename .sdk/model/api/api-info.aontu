@@ -1,0 +1,48 @@
+# API Information
+
+
+main: {
+  kit: {
+    info: {
+      contact: {
+        email: "support@vidsmaller.com"
+        name: "VidSmaller Support"
+        url: "https://vidsmaller.com/api-docs"
+      }
+      description: `Check platform upload limits, estimate a safe target size, and run asynchronous target-size video compression jobs. Read-only endpoints need no key. Uploads and compression jobs use a VidSmaller bearer API key and account credits. The GET job-status and job-download operations were removed because they need a VidSmaller API key (401 without one).
+
+\`sizeMb\` on GET /api/v1/estimate is marked required: the API answers 400 without \`sizeBytes\` or \`sizeMb\` (verified 2026-10-25).`
+      license: {
+        name: "Proprietary"
+        url: "https://vidsmaller.com/terms-of-service"
+      }
+      security: {
+        in: "header"
+        name: "Authorization"
+        prefix: "Bearer"
+        scheme: "bearerAuth"
+        type: "http"
+      }
+      servers: [
+        {
+          description: "Production"
+          url: "https://vidsmaller.com"
+        }
+      ]
+      summary: "Check platform upload limits, estimate a safe target size, and run asynchronous target-size video compression jobs."
+      termsOfService: "https://vidsmaller.com/terms-of-service"
+      title: "VidSmaller Video Compression API"
+      version: "1.0.0"
+      website: "https://vidsmaller.com"
+      "x-apisguru-categories": [
+        "media"
+      ]
+      "x-logo": {
+        altText: "VidSmaller"
+        backgroundColor: "#FFFFFF"
+        url: "https://vidsmaller.com/logo.png"
+      }
+    }
+  }
+}
+

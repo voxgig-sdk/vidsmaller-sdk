@@ -1,0 +1,18 @@
+# BasicJobFlow
+
+main: kit: flow: BasicJobFlow:
+{
+  entity: "job",
+  kind: "basic",
+  name: "BasicJobFlow",
+  step: [
+    {
+      i: {
+        ref: "job_ref01"
+      }
+
+      o: "create"
+    }
+  ],
+  "key$": "BasicJobFlow"
+}

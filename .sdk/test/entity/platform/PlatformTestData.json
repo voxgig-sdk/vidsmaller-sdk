@@ -1,0 +1,53 @@
+{
+  "existing": {
+    "platform": {
+      "PLATFORM00": {
+        "api": "s46",
+        "count": 71,
+        "docs": "s48",
+        "ok": false,
+        "platforms": [],
+        "unit": "s4b",
+        "verifiedAt": "s4c"
+      },
+      "PLATFORM01": {
+        "api": "s8c",
+        "count": 141,
+        "docs": "s8e",
+        "ok": false,
+        "platforms": [],
+        "unit": "s91",
+        "verifiedAt": "s92"
+      },
+      "PLATFORM02": {
+        "api": "sd2",
+        "count": 211,
+        "docs": "sd4",
+        "ok": false,
+        "platforms": [],
+        "unit": "sd7",
+        "verifiedAt": "sd8"
+      }
+    }
+  },
+  "new": {
+    "platform": {
+      "platform_ref01": {
+        "api": "s118",
+        "count": 281,
+        "docs": "s11a",
+        "ok": false,
+        "platforms": [],
+        "unit": "s11d",
+        "verifiedAt": "s11e"
+      }
+    }
+  },
+  "requests": {
+    "GET /api/v1/platforms": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    }
+  }
+}

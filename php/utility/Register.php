@@ -1,0 +1,72 @@
+<?php
+declare(strict_types=1);
+
+// Vidsmaller SDK utility registration
+
+require_once __DIR__ . '/../core/UtilityType.php';
+require_once __DIR__ . '/Clean.php';
+require_once __DIR__ . '/Done.php';
+require_once __DIR__ . '/MakeError.php';
+require_once __DIR__ . '/FeatureAdd.php';
+require_once __DIR__ . '/FeatureHook.php';
+require_once __DIR__ . '/FeatureInit.php';
+require_once __DIR__ . '/Fetcher.php';
+require_once __DIR__ . '/MakeFetchDef.php';
+require_once __DIR__ . '/MakeContext.php';
+require_once __DIR__ . '/MakeOptions.php';
+require_once __DIR__ . '/MakeRequest.php';
+require_once __DIR__ . '/MakeResponse.php';
+require_once __DIR__ . '/MakeResult.php';
+require_once __DIR__ . '/MakePoint.php';
+require_once __DIR__ . '/MakeSpec.php';
+require_once __DIR__ . '/MakeUrl.php';
+require_once __DIR__ . '/Param.php';
+require_once __DIR__ . '/PrepareAuth.php';
+require_once __DIR__ . '/PrepareBody.php';
+require_once __DIR__ . '/Graphql.php';
+require_once __DIR__ . '/PrepareHeaders.php';
+require_once __DIR__ . '/PrepareMethod.php';
+require_once __DIR__ . '/PrepareParams.php';
+require_once __DIR__ . '/PreparePath.php';
+require_once __DIR__ . '/PrepareQuery.php';
+require_once __DIR__ . '/ResultBasic.php';
+require_once __DIR__ . '/ResultBody.php';
+require_once __DIR__ . '/ResultHeaders.php';
+require_once __DIR__ . '/TransformRequest.php';
+require_once __DIR__ . '/TransformResponse.php';
+
+VidsmallerUtility::setRegistrar(function (VidsmallerUtility $u): void {
+    $u->clean = [VidsmallerClean::class, 'call'];
+    $u->clean_add = [VidsmallerClean::class, 'add'];
+    $u->clean_explain = [VidsmallerDone::class, 'clean_explain'];
+    $u->done = [VidsmallerDone::class, 'call'];
+    $u->make_error = [VidsmallerMakeError::class, 'call'];
+    $u->feature_add = [VidsmallerFeatureAdd::class, 'call'];
+    $u->feature_hook = [VidsmallerFeatureHook::class, 'call'];
+    $u->feature_init = [VidsmallerFeatureInit::class, 'call'];
+    $u->fetcher = [VidsmallerFetcher::class, 'call'];
+    $u->make_fetch_def = [VidsmallerMakeFetchDef::class, 'call'];
+    $u->make_context = [VidsmallerMakeContext::class, 'call'];
+    $u->make_options = [VidsmallerMakeOptions::class, 'call'];
+    $u->make_request = [VidsmallerMakeRequest::class, 'call'];
+    $u->make_response = [VidsmallerMakeResponse::class, 'call'];
+    $u->make_result = [VidsmallerMakeResult::class, 'call'];
+    $u->make_point = [VidsmallerMakePoint::class, 'call'];
+    $u->make_spec = [VidsmallerMakeSpec::class, 'call'];
+    $u->make_url = [VidsmallerMakeUrl::class, 'call'];
+    $u->param = [VidsmallerParam::class, 'call'];
+    $u->prepare_auth = [VidsmallerPrepareAuth::class, 'call'];
+    $u->prepare_body = [VidsmallerPrepareBody::class, 'call'];
+    $u->prepare_headers = [VidsmallerPrepareHeaders::class, 'call'];
+    $u->prepare_method = [VidsmallerPrepareMethod::class, 'call'];
+    $u->prepare_params = [VidsmallerPrepareParams::class, 'call'];
+    $u->prepare_path = [VidsmallerPreparePath::class, 'call'];
+    $u->prepare_query = [VidsmallerPrepareQuery::class, 'call'];
+    $u->graphql_body = [VidsmallerGraphql::class, 'body'];
+    $u->graphql_errors = [VidsmallerGraphql::class, 'errors'];
+    $u->result_basic = [VidsmallerResultBasic::class, 'call'];
+    $u->result_body = [VidsmallerResultBody::class, 'call'];
+    $u->result_headers = [VidsmallerResultHeaders::class, 'call'];
+    $u->transform_request = [VidsmallerTransformRequest::class, 'call'];
+    $u->transform_response = [VidsmallerTransformResponse::class, 'call'];
+});

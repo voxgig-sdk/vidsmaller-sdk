@@ -1,0 +1,1622 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "VidSmaller Video Compression API",
+    "version": "1.0.0",
+    "description": "Check platform upload limits, estimate a safe target size, and run asynchronous target-size video compression jobs. Read-only endpoints need no key. Uploads and compression jobs use a VidSmaller bearer API key and account credits. The GET job-status and job-download operations were removed because they need a VidSmaller API key (401 without one).\n\n`sizeMb` on GET /api/v1/estimate is marked required: the API answers 400 without `sizeBytes` or `sizeMb` (verified 2026-10-25).",
+    "termsOfService": "https://vidsmaller.com/terms-of-service",
+    "license": {
+      "name": "Proprietary",
+      "url": "https://vidsmaller.com/terms-of-service"
+    },
+    "contact": {
+      "name": "VidSmaller Support",
+      "url": "https://vidsmaller.com/api-docs",
+      "email": "support@vidsmaller.com"
+    },
+    "x-logo": {
+      "url": "https://vidsmaller.com/logo.png",
+      "backgroundColor": "#FFFFFF",
+      "altText": "VidSmaller"
+    },
+    "x-apisguru-categories": [
+      "media"
+    ]
+  },
+  "servers": [
+    {
+      "url": "https://vidsmaller.com",
+      "description": "Production"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Public data",
+      "description": "Free read-only endpoints. No authentication required; 600 requests per hour per IP."
+    },
+    {
+      "name": "Video jobs",
+      "description": "Authenticated uploads and asynchronous compression jobs billed with VidSmaller credits."
+    }
+  ],
+  "paths": {
+    "/api/v1/platforms": {
+      "get": {
+        "tags": [
+          "Public data"
+        ],
+        "operationId": "listPlatformLimits",
+        "summary": "List sourced platform upload limits",
+        "security": [],
+        "description": "Returns each tracked platform's stated limits, a safe compression target, source URLs, and the date the facts were last verified.",
+        "responses": {
+          "200": {
+            "description": "Platform limits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformListResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/v1/estimate": {
+      "get": {
+        "tags": [
+          "Public data"
+        ],
+        "operationId": "estimateVideoByQuery",
+        "summary": "Check upload fit and estimate compression",
+        "security": [],
+        "description": "Accepts the same fields as the POST JSON body through query parameters. sizeBytes or sizeMb is required.",
+        "parameters": [
+          {
+            "name": "sizeBytes",
+            "in": "query",
+            "description": "Source file size in bytes. Takes precedence over sizeMb.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "sizeMb",
+            "in": "query",
+            "description": "Source size in MiB, where 1 MB equals 1,048,576 bytes.",
+            "schema": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "required": true,
+            "example": 100
+          },
+          {
+            "name": "durationSeconds",
+            "in": "query",
+            "description": "Video duration. Strongly recommended for bitrate and quality guidance.",
+            "schema": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 86400
+            }
+          },
+          {
+            "name": "width",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 16384
+            }
+          },
+          {
+            "name": "height",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 16384
+            }
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "description": "Platform key returned by /api/v1/platforms.",
+            "schema": {
+              "$ref": "#/components/schemas/PlatformKey"
+            }
+          },
+          {
+            "name": "targetMb",
+            "in": "query",
+            "description": "Explicit target size in MiB. Overrides the platform's safe target.",
+            "schema": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 10240
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/CompressionMode"
+            }
+          },
+          {
+            "name": "preset",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/CompressionPreset"
+            }
+          },
+          {
+            "name": "targetSizeMb",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 10240
+            }
+          },
+          {
+            "name": "crf",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 18,
+              "maximum": 51
+            }
+          },
+          {
+            "name": "resolution",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ResolutionDimensions"
+            }
+          },
+          {
+            "name": "maxResolution",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ResolutionDimensions"
+            }
+          },
+          {
+            "name": "bitrateKbps",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 512000
+            }
+          },
+          {
+            "name": "codec",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/EstimateCodec"
+            }
+          },
+          {
+            "name": "speed",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/CompressionSpeed"
+            }
+          },
+          {
+            "name": "outputFormat",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OutputFormat"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fit verdict and estimate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstimateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Public data"
+        ],
+        "operationId": "estimateVideo",
+        "summary": "Check upload fit and estimate compression from JSON",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EstimateRequest"
+              },
+              "examples": {
+                "discord": {
+                  "summary": "Check a 150 MB video against Discord",
+                  "value": {
+                    "sizeMb": 150,
+                    "durationSeconds": 596,
+                    "platform": "discord"
+                  }
+                },
+                "customTarget": {
+                  "summary": "Estimate a custom target-size encode",
+                  "value": {
+                    "sizeMb": 500,
+                    "durationSeconds": 900,
+                    "targetMb": 100,
+                    "settings": {
+                      "mode": "target_size",
+                      "targetSizeMb": 100,
+                      "codec": "libx264",
+                      "maxResolution": "1920:1080"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fit verdict and estimate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstimateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/api/v1/video/uploads": {
+      "post": {
+        "tags": [
+          "Video jobs"
+        ],
+        "operationId": "createVideoUpload",
+        "summary": "Create a signed upload URL",
+        "description": "Returns a one-hour signed PUT URL and an upload token. PUT the raw file with the returned headers before creating a compression job.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              },
+              "example": {
+                "filename": "input.mp4",
+                "file_size": 52428800,
+                "content_type": "video/mp4"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Signed upload URL created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "413": {
+            "description": "File exceeds the account's plan limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Uploads are not configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/video/jobs": {
+      "post": {
+        "tags": [
+          "Video jobs"
+        ],
+        "operationId": "createVideoJob",
+        "summary": "Create an asynchronous target-size compression job",
+        "description": "Provide exactly one of source_url or upload_token. The source URL must point directly to a publicly reachable video file.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateJobRequest"
+              },
+              "examples": {
+                "publicUrl": {
+                  "summary": "Compress a public video URL",
+                  "value": {
+                    "source_url": "https://cdn.example.com/input.mp4",
+                    "target_size_mb": 25,
+                    "codec": "h264",
+                    "max_resolution": "1080p",
+                    "output_format": "mp4",
+                    "webhook_url": "https://example.com/webhooks/vidsmaller"
+                  }
+                },
+                "uploadedFile": {
+                  "summary": "Compress a previously uploaded file",
+                  "value": {
+                    "upload_token": "UPLOAD_TOKEN_FROM_THE_SIGNED_UPLOAD_RESPONSE",
+                    "target_size_mb": 25
+                  }
+                }
+              }
+            }
+          }
+        },
+        "callbacks": {
+          "jobFinished": {
+            "{$request.body#/webhook_url}": {
+              "post": {
+                "summary": "Terminal job event",
+                "description": "Signed with x-vidsmaller-timestamp and x-vidsmaller-signature. Compute HMAC-SHA256 over timestamp + '.' + the raw request body using the webhook secret shown when the API key was created.",
+                "security": [
+                  {
+                    "webhookSignature": [],
+                    "webhookTimestamp": []
+                  }
+                ],
+                "parameters": [
+                  {
+                    "name": "x-vidsmaller-timestamp",
+                    "in": "header",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "x-vidsmaller-signature",
+                    "in": "header",
+                    "required": true,
+                    "schema": {
+                      "type": "string",
+                      "pattern": "^v1=[a-f0-9]{64}$"
+                    }
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/WebhookEvent"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Webhook accepted"
+                  },
+                  "400": {
+                    "description": "Webhook rejected"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Compression job created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "402": {
+            "description": "Insufficient credits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Uploaded file is not ready",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "502": {
+            "description": "Source video or uploaded file could not be inspected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "VidSmaller API key",
+        "description": "Create a key at https://vidsmaller.com/dashboard/api-keys."
+      },
+      "webhookSignature": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-vidsmaller-signature",
+        "description": "v1-prefixed HMAC-SHA256 of timestamp + '.' + rawBody."
+      },
+      "webhookTimestamp": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-vidsmaller-timestamp"
+      }
+    },
+    "parameters": {
+      "JobId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Compression job ID",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Invalid or missing API key",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Job not found for this key",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "RateLimited": {
+        "description": "Request or concurrency limit reached",
+        "headers": {
+          "Retry-After": {
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "PlatformKey": {
+        "type": "string",
+        "enum": [
+          "discord",
+          "email",
+          "whatsapp",
+          "telegram",
+          "slack",
+          "instagram",
+          "tiktok",
+          "twitter"
+        ]
+      },
+      "CompressionMode": {
+        "type": "string",
+        "enum": [
+          "preset",
+          "target_size",
+          "quality",
+          "resolution",
+          "bitrate"
+        ],
+        "default": "preset"
+      },
+      "CompressionPreset": {
+        "type": "string",
+        "enum": [
+          "light",
+          "balanced",
+          "strong",
+          "extreme"
+        ],
+        "default": "balanced"
+      },
+      "EstimateCodec": {
+        "type": "string",
+        "enum": [
+          "libx264",
+          "libx265"
+        ],
+        "default": "libx264"
+      },
+      "CompressionSpeed": {
+        "type": "string",
+        "enum": [
+          "veryfast",
+          "faster",
+          "fast",
+          "medium",
+          "slow"
+        ],
+        "default": "faster"
+      },
+      "OutputFormat": {
+        "type": "string",
+        "enum": [
+          "mp4",
+          "mkv",
+          "webm",
+          "mov"
+        ],
+        "default": "mp4"
+      },
+      "ResolutionDimensions": {
+        "type": "string",
+        "enum": [
+          "3840:2160",
+          "2560:1440",
+          "1920:1080",
+          "1280:720",
+          "1024:576",
+          "854:480",
+          "640:360"
+        ]
+      },
+      "ApiEnvelope": {
+        "type": "object",
+        "required": [
+          "ok",
+          "api",
+          "docs"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "api": {
+            "type": "string",
+            "const": "v1"
+          },
+          "docs": {
+            "type": "string",
+            "format": "uri",
+            "const": "https://vidsmaller.com/api-docs"
+          }
+        }
+      },
+      "SourceLink": {
+        "type": "object",
+        "required": [
+          "label",
+          "url"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "PlatformTier": {
+        "type": "object",
+        "required": [
+          "name",
+          "limitMb",
+          "note"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "limitMb": {
+            "type": "number"
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "Platform": {
+        "type": "object",
+        "required": [
+          "key",
+          "name",
+          "statedLimitMb",
+          "statedLimitTier",
+          "tierNote",
+          "safeTargetMb",
+          "tiers",
+          "verifiedAt",
+          "sources",
+          "guideUrl"
+        ],
+        "properties": {
+          "key": {
+            "$ref": "#/components/schemas/PlatformKey"
+          },
+          "name": {
+            "type": "string"
+          },
+          "statedLimitMb": {
+            "type": "number"
+          },
+          "statedLimitTier": {
+            "type": "string"
+          },
+          "tierNote": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "safeTargetMb": {
+            "type": "number"
+          },
+          "tiers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlatformTier"
+            }
+          },
+          "verifiedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceLink"
+            }
+          },
+          "guideUrl": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "PlatformListResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ApiEnvelope"
+          },
+          {
+            "type": "object",
+            "required": [
+              "verifiedAt",
+              "unit",
+              "count",
+              "platforms"
+            ],
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "verifiedAt": {
+                "type": "string",
+                "format": "date"
+              },
+              "unit": {
+                "type": "string",
+                "const": "MB = 1048576 bytes"
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "platforms": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Platform"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "CompressionSettings": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "$ref": "#/components/schemas/CompressionMode"
+          },
+          "preset": {
+            "$ref": "#/components/schemas/CompressionPreset"
+          },
+          "targetSizeMb": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 10240
+          },
+          "crf": {
+            "type": "integer",
+            "minimum": 18,
+            "maximum": 51
+          },
+          "resolution": {
+            "$ref": "#/components/schemas/ResolutionDimensions"
+          },
+          "maxResolution": {
+            "$ref": "#/components/schemas/ResolutionDimensions"
+          },
+          "bitrateKbps": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 512000
+          },
+          "codec": {
+            "$ref": "#/components/schemas/EstimateCodec"
+          },
+          "speed": {
+            "$ref": "#/components/schemas/CompressionSpeed"
+          },
+          "outputFormat": {
+            "$ref": "#/components/schemas/OutputFormat"
+          },
+          "oldDeviceCompatible": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "EstimateRequest": {
+        "type": "object",
+        "anyOf": [
+          {
+            "required": [
+              "sizeBytes"
+            ]
+          },
+          {
+            "required": [
+              "sizeMb"
+            ]
+          }
+        ],
+        "properties": {
+          "sizeBytes": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "sizeMb": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "durationSeconds": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 86400
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 16384
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 16384
+          },
+          "platform": {
+            "$ref": "#/components/schemas/PlatformKey"
+          },
+          "targetMb": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 10240
+          },
+          "settings": {
+            "$ref": "#/components/schemas/CompressionSettings"
+          }
+        }
+      },
+      "EstimateInput": {
+        "type": "object",
+        "required": [
+          "sizeBytes",
+          "sizeMb",
+          "durationSeconds",
+          "width",
+          "height"
+        ],
+        "properties": {
+          "sizeBytes": {
+            "type": "integer"
+          },
+          "sizeMb": {
+            "type": "number"
+          },
+          "durationSeconds": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "width": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "height": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        }
+      },
+      "EstimateTarget": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "platform": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "platformName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "safeTargetMb": {
+            "type": "number"
+          },
+          "targetSource": {
+            "type": "string",
+            "enum": [
+              "explicit",
+              "platform"
+            ]
+          },
+          "statedLimitMb": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "statedLimitTier": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tierNote": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "verifiedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceLink"
+            }
+          },
+          "guideUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          }
+        }
+      },
+      "EstimateResult": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "settings": {
+            "$ref": "#/components/schemas/CompressionSettings"
+          },
+          "outputBytes": {
+            "type": "integer"
+          },
+          "outputMb": {
+            "type": "number"
+          },
+          "savedPercent": {
+            "type": "number"
+          },
+          "fitsTarget": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "jobSeconds": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        }
+      },
+      "Recommendation": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "settings": {
+            "$ref": "#/components/schemas/CompressionSettings"
+          },
+          "outputMb": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "savedPercent": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "jobSeconds": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "quality": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "totalKbps": {
+                "type": "number"
+              },
+              "videoKbps": {
+                "type": "number"
+              },
+              "audioKbps": {
+                "type": "number"
+              },
+              "verdict": {
+                "type": "string"
+              },
+              "comfortableUpTo": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "watchableUpTo": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "EstimateResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ApiEnvelope"
+          },
+          {
+            "type": "object",
+            "required": [
+              "unit",
+              "input",
+              "target",
+              "verdict",
+              "fitsAsIs",
+              "estimate",
+              "recommendation",
+              "notes",
+              "compressUrl"
+            ],
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "unit": {
+                "type": "string",
+                "const": "MB = 1048576 bytes"
+              },
+              "input": {
+                "$ref": "#/components/schemas/EstimateInput"
+              },
+              "target": {
+                "$ref": "#/components/schemas/EstimateTarget"
+              },
+              "verdict": {
+                "type": "string",
+                "enum": [
+                  "no_target",
+                  "fits_as_is",
+                  "compress_recommended"
+                ]
+              },
+              "fitsAsIs": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "estimate": {
+                "$ref": "#/components/schemas/EstimateResult"
+              },
+              "recommendation": {
+                "$ref": "#/components/schemas/Recommendation"
+              },
+              "notes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "compressUrl": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        ]
+      },
+      "UploadRequest": {
+        "type": "object",
+        "required": [
+          "filename",
+          "file_size"
+        ],
+        "properties": {
+          "filename": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "file_size": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "content_type": {
+            "type": "string",
+            "default": "application/octet-stream",
+            "maxLength": 120
+          }
+        }
+      },
+      "UploadResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ApiEnvelope"
+          },
+          {
+            "type": "object",
+            "required": [
+              "upload",
+              "upload_token",
+              "next"
+            ],
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "upload": {
+                "type": "object",
+                "required": [
+                  "method",
+                  "url",
+                  "headers",
+                  "expires_in"
+                ],
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "const": "PUT"
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "headers": {
+                    "type": "object",
+                    "required": [
+                      "content-type",
+                      "content-length"
+                    ],
+                    "properties": {
+                      "content-type": {
+                        "type": "string"
+                      },
+                      "content-length": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "expires_in": {
+                    "type": "integer",
+                    "const": 3600
+                  }
+                }
+              },
+              "upload_token": {
+                "type": "string"
+              },
+              "next": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "CreateJobRequest": {
+        "type": "object",
+        "required": [
+          "target_size_mb"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "source_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "upload_token": false
+            },
+            "required": [
+              "source_url"
+            ]
+          },
+          {
+            "properties": {
+              "source_url": false,
+              "upload_token": {
+                "type": "string",
+                "minLength": 40
+              }
+            },
+            "required": [
+              "upload_token"
+            ]
+          }
+        ],
+        "properties": {
+          "source_url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000
+          },
+          "upload_token": {
+            "type": "string",
+            "minLength": 40,
+            "maxLength": 4000
+          },
+          "duration_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 86400
+          },
+          "target_size_mb": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 10240
+          },
+          "codec": {
+            "type": "string",
+            "enum": [
+              "h264",
+              "h265"
+            ],
+            "default": "h264"
+          },
+          "max_resolution": {
+            "type": "string",
+            "enum": [
+              "2160p",
+              "1440p",
+              "1080p",
+              "720p",
+              "576p",
+              "480p",
+              "360p"
+            ]
+          },
+          "output_format": {
+            "$ref": "#/components/schemas/OutputFormat"
+          },
+          "webhook_url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000
+          }
+        }
+      },
+      "VideoJob": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "progress",
+          "stage",
+          "eta_seconds",
+          "input_filename",
+          "output_filename",
+          "input_size",
+          "output_size",
+          "saved_bytes",
+          "saved_percent",
+          "credits_charged",
+          "download_url",
+          "expires_at",
+          "error_code",
+          "created_at",
+          "completed_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "uploading",
+              "processing",
+              "completed",
+              "failed",
+              "expired"
+            ]
+          },
+          "progress": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "stage": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "eta_seconds": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "input_filename": {
+            "type": "string"
+          },
+          "output_filename": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "input_size": {
+            "type": "integer"
+          },
+          "output_size": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "saved_bytes": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "saved_percent": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "credits_charged": {
+            "type": "integer"
+          },
+          "download_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "JobResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ApiEnvelope"
+          },
+          {
+            "type": "object",
+            "required": [
+              "job"
+            ],
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "job": {
+                "$ref": "#/components/schemas/VideoJob"
+              }
+            }
+          }
+        ]
+      },
+      "JobStatusResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/JobResponse"
+          },
+          {
+            "type": "object",
+            "required": [
+              "webhook"
+            ],
+            "properties": {
+              "webhook": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "properties": {
+                  "attempts": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "delivered_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "last_error": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "WebhookEvent": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "created_at",
+          "data"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^evt_"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "video.job.completed",
+              "video.job.failed",
+              "video.job.expired"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data": {
+            "$ref": "#/components/schemas/VideoJob"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ApiEnvelope"
+          },
+          {
+            "type": "object",
+            "required": [
+              "error"
+            ],
+            "properties": {
+              "ok": {
+                "const": false
+              },
+              "error": {
+                "type": "string"
+              },
+              "issues": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "field",
+                    "message"
+                  ],
+                  "properties": {
+                    "field": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "knownPlatforms": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

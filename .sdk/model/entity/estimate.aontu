@@ -1,0 +1,372 @@
+# Entity: estimate
+
+main: kit: entity: estimate: {
+
+  alias: field: {}
+
+  fields: {
+    api: {
+      h: "Api"
+      n: "api"
+      r: true
+      t: "`$STRING`"
+    }
+    compressUrl: {
+      fo: "uri"
+      h: "Compress Url"
+      n: "compressUrl"
+      r: true
+      t: "`$STRING`"
+    }
+    docs: {
+      fo: "uri"
+      h: "Docs"
+      n: "docs"
+      r: true
+      t: "`$STRING`"
+    }
+    durationSeconds: {
+      h: "Duration Seconds"
+      n: "durationSeconds"
+      r: false
+      t: "`$NUMBER`"
+    }
+    estimate: {
+      h: "Estimate"
+      n: "estimate"
+      r: true
+      t: [
+        "`$ONE`"
+        [
+          "`$OBJECT`"
+          "`$NULL`"
+        ]
+      ]
+    }
+    fitsAsIs: {
+      h: "Fits As Is"
+      n: "fitsAsIs"
+      r: true
+      t: [
+        "`$ONE`"
+        [
+          "`$BOOLEAN`"
+          "`$NULL`"
+        ]
+      ]
+    }
+    height: {
+      h: "Height"
+      n: "height"
+      r: false
+      t: "`$INTEGER`"
+    }
+    input: {
+      h: "Input"
+      n: "input"
+      r: true
+      t: "`$OBJECT`"
+    }
+    notes: {
+      h: "Notes"
+      n: "notes"
+      r: true
+      t: "`$ARRAY`"
+    }
+    ok: {
+      h: "Ok"
+      n: "ok"
+      r: true
+      t: "`$BOOLEAN`"
+    }
+    platform: {
+      h: "Platform"
+      n: "platform"
+      r: false
+      t: "`$STRING`"
+    }
+    recommendation: {
+      h: "Recommendation"
+      n: "recommendation"
+      r: true
+      t: [
+        "`$ONE`"
+        [
+          "`$OBJECT`"
+          "`$NULL`"
+        ]
+      ]
+    }
+    settings: {
+      h: "Settings"
+      n: "settings"
+      r: false
+      t: "`$OBJECT`"
+    }
+    sizeBytes: {
+      h: "Size Bytes"
+      n: "sizeBytes"
+      r: false
+      t: "`$INTEGER`"
+    }
+    sizeMb: {
+      h: "Size Mb"
+      n: "sizeMb"
+      r: false
+      t: "`$NUMBER`"
+    }
+    target: {
+      h: "Target"
+      n: "target"
+      r: true
+      t: [
+        "`$ONE`"
+        [
+          "`$OBJECT`"
+          "`$NULL`"
+        ]
+      ]
+    }
+    targetMb: {
+      h: "Target Mb"
+      n: "targetMb"
+      r: false
+      t: "`$NUMBER`"
+    }
+    unit: {
+      h: "Unit"
+      n: "unit"
+      r: true
+      t: "`$STRING`"
+    }
+    verdict: {
+      h: "Verdict"
+      n: "verdict"
+      r: true
+      t: "`$STRING`"
+    }
+    width: {
+      h: "Width"
+      n: "width"
+      r: false
+      t: "`$INTEGER`"
+    }
+  }
+
+  name: "estimate"
+  op: {
+    create: {
+      name: "create"
+      points: [
+        {
+          bf: [
+            "durationSeconds"
+            "height"
+            "platform"
+            "settings"
+            "sizeBytes"
+            "sizeMb"
+            "targetMb"
+            "width"
+          ]
+          co: {
+            id: "POST /api/v1/estimate"
+            source: "openapi3"
+            version: 2
+          }
+          m: "POST"
+          o: "/api/v1/estimate"
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
+          s: [
+            {
+              lit: "api"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "estimate"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.estimate`"
+          }
+        }
+      ]
+    }
+    list: {
+      name: "list"
+      points: [
+        {
+          co: {
+            id: "GET /api/v1/estimate"
+            source: "openapi3"
+            version: 2
+          }
+          g: {
+            query: [
+              {
+                k: "query"
+                n: "bitrate_kbp"
+                or: "bitrateKbps"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                ex: "libx264"
+                k: "query"
+                n: "codec"
+                or: "codec"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "query"
+                n: "crf"
+                or: "crf"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "query"
+                n: "duration_second"
+                or: "durationSeconds"
+                r: false
+                t: "`$NUMBER`"
+              }
+              {
+                k: "query"
+                n: "height"
+                or: "height"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                k: "query"
+                n: "max_resolution"
+                or: "maxResolution"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                ex: "preset"
+                k: "query"
+                n: "mode"
+                or: "mode"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                ex: "mp4"
+                k: "query"
+                n: "output_format"
+                or: "outputFormat"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "query"
+                n: "platform"
+                or: "platform"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                ex: "balanced"
+                k: "query"
+                n: "preset"
+                or: "preset"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "query"
+                n: "resolution"
+                or: "resolution"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "query"
+                n: "size_byte"
+                or: "sizeBytes"
+                r: false
+                t: "`$INTEGER`"
+              }
+              {
+                ex: 100
+                k: "query"
+                n: "size_mb"
+                or: "sizeMb"
+                r: true
+                t: "`$NUMBER`"
+              }
+              {
+                ex: "faster"
+                k: "query"
+                n: "speed"
+                or: "speed"
+                r: false
+                t: "`$STRING`"
+              }
+              {
+                k: "query"
+                n: "target_mb"
+                or: "targetMb"
+                r: false
+                t: "`$NUMBER`"
+              }
+              {
+                k: "query"
+                n: "target_size_mb"
+                or: "targetSizeMb"
+                r: false
+                t: "`$NUMBER`"
+              }
+              {
+                k: "query"
+                n: "width"
+                or: "width"
+                r: false
+                t: "`$INTEGER`"
+              }
+            ]
+          }
+          m: "GET"
+          o: "/api/v1/estimate"
+          q: {
+            exist: [
+              "size_mb"
+            ]
+          }
+          rs: {
+            kind: "json"
+            media: "application/json"
+          }
+          s: [
+            {
+              lit: "api"
+            }
+            {
+              lit: "v1"
+            }
+            {
+              lit: "estimate"
+            }
+          ]
+          t: {
+            req: "`reqdata`"
+            res: "`body.estimate`"
+          }
+        }
+      ]
+    }
+  }
+
+
+
+}
